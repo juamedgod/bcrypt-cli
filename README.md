@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/bitnami/bcrypt-cli.svg?style=svg)](https://circleci.com/gh/bitnami/bcrypt-cli)
+
 # bcrypt
 
 This tool allows generating the bcrypt hash for the provided password through stdin 
