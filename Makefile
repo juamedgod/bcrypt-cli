@@ -19,6 +19,9 @@ build:
 	@go build -ldflags="-X 'main.buildDate=$(BUILD_DATE)' -X main.commit=$(GIT_HASH) -s -w" -o $(TOOL_PATH)
 	@echo "*** Binary created under $(TOOL_PATH) ***"
 
+build/arm64:
+	@GOARCH=arm64 go build -ldflags="-s -w" -o $(BUILD_DIR)/arm64/$(TOOL_NAME)
+
 clean:
 	@rm -rf $(BUILD_DIR)
 
