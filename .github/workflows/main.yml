@@ -44,5 +44,5 @@ jobs:
       - name: Archive Built Binaries
         uses: actions/upload-artifact@v2
         with:
-          name: binaries
-          path: out/**
+          name: Results
+          path: out
