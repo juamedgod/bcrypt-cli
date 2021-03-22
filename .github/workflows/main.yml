@@ -19,7 +19,7 @@ on:
 jobs:
   # This workflow contains a single job called "build"
   build-and-test:
-    image: golang:1.15.10-buster
+    container: golang:1.15.10-buster
     # The type of runner that the job will run on
     runs-on: ubuntu-20.04
     name: Build and Test
