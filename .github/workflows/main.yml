@@ -1,0 +1,48 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the action will run.
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches:
+      - master
+  pull_request:
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+  schedule:
+    - cron:  '0 0 * * *'
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build-and-test:
+    image: golang:1.15.10-buster
+    # The type of runner that the job will run on
+    runs-on: ubuntu-20.04
+    name: Build and Test
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+      - name: Install Build Dependencies
+        run: make get-build-deps
+      - name: Download required modules
+        run: make download
+      - name: Vet
+        run: make vet
+      - name: Lint
+        run: make lint
+      - name: Cover
+        run: make cover
+      - name: Build linux
+        run: make build
+      - name: Build Linux arm64
+        run: make build/arm64
+      - name: Archive Built Binaries
+        uses: actions/upload-artifact@v2
+        with:
+          name: binaries
+          path: out/**

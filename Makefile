@@ -9,30 +9,30 @@ include ./vars.mk
 
 all:
 	@$(MAKE) get-build-deps
-	@$(MAKE) dep-ensure
+	@$(MAKE) download
 	@$(MAKE) vet
 	@$(MAKE) lint
 	@$(MAKE) cover
 	@$(MAKE) build
 
 build:
-	@go build -ldflags="-X 'main.buildDate=$(BUILD_DATE)' -X main.commit=$(GIT_HASH) -s -w" -o $(TOOL_PATH)
+	@go build -ldflags=$(LDFLAGS) -o $(TOOL_PATH)
 	@echo "*** Binary created under $(TOOL_PATH) ***"
 
 build/arm64:
-	@GOARCH=arm64 go build -ldflags="-s -w" -o $(BUILD_DIR)/arm64/$(TOOL_NAME)
+	@GOARCH=arm64 go build -ldflags=$(LDFLAGS) -o $(BUILD_DIR)/arm64/$(TOOL_NAME)
 
 clean:
 	@rm -rf $(BUILD_DIR)
 
-dep-ensure:
-	$(DEP_ENSURE) -vendor-only
+download:
+	$(GO_MOD) download
 
 get-build-deps:
 	@echo "+ Downloading build dependencies"
 	@go get golang.org/x/tools/cmd/goimports
 	@go get golang.org/x/lint/golint
-	@go get -u github.com/golang/dep/cmd/dep
+
 
 vet:
 	@echo "+ Vet"
