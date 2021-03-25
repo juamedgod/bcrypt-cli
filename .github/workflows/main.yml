@@ -61,8 +61,7 @@ jobs:
             out/bcrypt-linux-arm64.zip
             out/bcrypt-linux-amd64.zip
   release:
-    needs: [ build-and-test ]
-    - name: Release
+    needs: [ 'build-and-test' ]
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/download-artifact@v2
