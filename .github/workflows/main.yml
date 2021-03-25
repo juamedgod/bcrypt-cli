@@ -22,14 +22,15 @@ on:
 jobs:
   # This workflow contains a single job called "build"
   build-and-test:
-    container: golang:1.15.10-buster
-    # The type of runner that the job will run on
     runs-on: ubuntu-20.04
     name: Build and Test
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
+        with:
+          go-version: '^1.15.10' # The Go version to download (if necessary) and use.
       - name: Install Build Dependencies
         run: make get-build-deps
       - name: Download required modules
@@ -40,20 +41,16 @@ jobs:
         run: make lint
       - name: Cover
         run: make cover
-      - name: Build linux
+      - name: Build
         run: |
-          rm -rf out/bcrypt
-          make build
-          mv out/bcrypt out/bcrypt-linux-amd64
-          cd out
-          zip -r bcrypt-linux-arm64.zip bcrypt-linux-arm64
-      - name: Build linux/arm64
-        run: |
-          rm -rf out/bcrypt
-          make build/arm64
-          mv out/bcrypt out/bcrypt-linux-arm64
-          cd out
-          zip -r bcrypt-linux-arm64.zip bcrypt-linux-arm64
+          set -ex
+          for dist in amd64 arm64; do
+             target=out/bcrypt-linux-$dist
+             rm -rf "$target"
+             make build/$dist TOOL_PATH="$target"
+             file $target
+             zip -j "$target.zip" "$target"
+          done
       - uses: actions/upload-artifact@v2
         with:
           name: built-binaries

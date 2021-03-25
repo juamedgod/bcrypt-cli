@@ -15,12 +15,13 @@ all:
 	@$(MAKE) cover
 	@$(MAKE) build
 
-build:
-	@go build -ldflags=$(LDFLAGS) -o $(TOOL_PATH)
-	@echo "*** Binary created under $(TOOL_PATH) ***"
+build/%:
+	@echo "Building GOARCH=$(*F)"
+	@GOARCH=$(*F) go build -ldflags=$(LDFLAGS) -o $(TOOL_PATH)
 
-build/arm64:
-	@GOARCH=arm64 go build -ldflags=$(LDFLAGS) -o $(BUILD_DIR)/arm64/$(TOOL_NAME)
+build:
+	make build/amd64
+	@echo "*** Binary created under $(TOOL_PATH) ***"
 
 clean:
 	@rm -rf $(BUILD_DIR)
