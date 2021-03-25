@@ -66,3 +66,10 @@ jobs:
           path: ./artifacts
       - run: ls ./artifacts/
       - run: find ./artifacts/
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            ./artifacts/built-binaries/*zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
