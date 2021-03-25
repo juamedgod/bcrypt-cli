@@ -59,6 +59,7 @@ jobs:
             out/bcrypt-linux-amd64.zip
   release:
     needs: [ 'build-and-test' ]
+    if: startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/download-artifact@v2
