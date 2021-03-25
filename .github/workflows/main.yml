@@ -54,11 +54,18 @@ jobs:
           mv out/bcrypt out/bcrypt-linux-arm64
           cd out
           zip -r bcrypt-linux-arm64.zip bcrypt-linux-arm64
-      - name: Release
-        if: startsWith(github.ref, 'refs/tags/')
-        uses: softprops/action-gh-release@v1
+      - uses: actions/upload-artifact@v2
         with:
-          files: |
-            out/bcrypt-linux*zip
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          name: built-binaries
+          path: |
+            out/bcrypt-linux-arm64.zip
+            out/bcrypt-linux-amd64.zip
+  release:
+    needs: [ build-and-test ]
+    - name: Release
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/download-artifact@v2
+        with:
+          path: ./artifacts
+      - run: ls ./artifacts
